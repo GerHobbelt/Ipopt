@@ -23,6 +23,12 @@
 #define IPOPT_FORTRAN_INTEGER_TYPE ipindex
 #endif
 
+#if defined(BUILD_MONOLITHIC)
+#define IPOPTLIB_EXPORT
+#define SIPOPTLIB_EXPORT
+#define IPOPTAMPLINTERFACELIB_EXPORT
+#endif
+
 #ifndef IPOPTLIB_EXPORT
 #if defined(_WIN32) && defined(DLL_EXPORT)
 #define IPOPTLIB_EXPORT __declspec(dllimport)
@@ -33,8 +39,8 @@
 
 #ifndef SIPOPTLIB_EXPORT
 #if defined(_WIN32) && defined(DLL_EXPORT)
-#define DIPOPTLIB_EXPORT __declspec(dllimport)
+#define SIPOPTLIB_EXPORT __declspec(dllimport)
 #else
-#define DIPOPTLIB_EXPORT
+#define SIPOPTLIB_EXPORT
 #endif
 #endif
