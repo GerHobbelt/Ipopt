@@ -7,6 +7,15 @@ More detailed information about incremental changes can be found in the
 
 ## 3.14
 
+### 3.14.17 (2024-xx-yy)
+
+- Added `Ipopt::RegisterInterruptHandler()` and `Ipopt::UnregisterInterruptHandler()`
+  to `IpUtils.hpp` to wrap handling of interrupt signals.
+  Added parameter `checkinterrupt` (default false) to `AmplTNLP` constructor
+  to enable check for interrupt signal in `intermediate_callback`.
+- The `ipopt` executable can now be interrupted by SIGINT/SIGHUP (POSIX systems) or
+  SIGINT/SIGTERM/SIGABRT (Windows systems).
+
 ### 3.14.16 (2024-04-22)
 
 - Fixed load of linear solver libraries at runtime on Windows, which got
