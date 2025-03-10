@@ -20,6 +20,9 @@ More detailed information about incremental changes can be found in the
 - Updated build system to current autotools versions; initial support for icx/ifx and flang
 - Removed use of `vsprintf` and `sprintf`. Added `IpoptData::Append_info_string(std::string,double)`.
 - Removed use of `strcpy`, `strncpy`, `strdup`, and `sscanf`.
+- Use `fopen_s` and `getenv_s` instead of `fopen` and `getenv`, respectively, if available.
+- Added workaround for using Pardiso from Intel MKL 2025.0.1 [#799].
+  This requires checking the MKL version at runtime and can be disabled by defining `IPOPT_NO_MKLVERSIONCHECK`.
 
 ### 3.14.16 (2024-04-22)
 

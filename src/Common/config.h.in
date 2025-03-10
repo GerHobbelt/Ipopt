@@ -101,6 +101,12 @@
 /* Define to 1 if function feenableexcept is available */
 #undef IPOPT_HAS_FEENABLEEXCEPT
 
+/* Define to 1 if function fopen_s is available */
+#undef IPOPT_HAS_FOPEN_S
+
+/* Define to 1 if function getenv_s is available */
+#undef IPOPT_HAS_GETENV_S
+
 /* Define to 1 if HSL is available. */
 #undef IPOPT_HAS_HSL
 
@@ -120,8 +126,14 @@
 /* Define to 1 if function rand is available */
 #undef IPOPT_HAS_RAND
 
+/* Define to 1 if function sigaction is available */
+#undef IPOPT_HAS_SIGACTION
+
 /* Define to 1 if the Spral package is available */
 #undef IPOPT_HAS_SPRAL
+
+/* Define to 1 if function std::rand is available */
+#undef IPOPT_HAS_STD__RAND
 
 /* Define to 1 if va_copy is available */
 #undef IPOPT_HAS_VA_COPY

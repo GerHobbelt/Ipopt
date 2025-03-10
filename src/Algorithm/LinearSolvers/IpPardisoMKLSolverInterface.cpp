@@ -50,6 +50,24 @@ extern "C"
       ipindex*         E,
       ipnumber*        DPARM
    );
+
+#ifndef IPOPT_NO_MKLVERSIONCHECK
+   typedef struct
+   {
+      int   MajorVersion;
+      int   MinorVersion;
+      int   UpdateVersion;
+      int   PatchVersion;
+      char* ProductStatus;
+      char* Build;
+      char* Processor;
+      char* Platform;
+   } MKLVersion;
+
+   void MKL_Get_Version(
+      MKLVersion* ver
+   );
+#endif
 }
 
 namespace Ipopt
@@ -245,6 +263,24 @@ bool PardisoMKLSolverInterface::InitializeImpl(
    IPARM_[27] = 0; // Use double precision
 #endif
 
+   // MKL 2025.0.1 does not work correctly with IPARM_[20] = 3 and IPARM_[7] > 0
+   // workaround: change to IPARM_[20] = 1 (the default)
+   // https://github.com/coin-or/Ipopt/issues/799
+   // https://community.intel.com/t5/Intel-oneAPI-Math-Kernel-Library/Pardiso-bunch-kaufman-pivoting-option-3-different-in-MKL-2025-0/m-p/1648273
+#ifndef IPOPT_NO_MKLVERSIONCHECK
+   if( IPARM_[7] > 0 )
+   {
+      MKLVersion mklver;
+      MKL_Get_Version(&mklver);
+      if( mklver.MajorVersion >= 2025 )
+      {
+         IPARM_[20] = 1;
+         Jnlst().Printf(J_DETAILED, J_LINEAR_ALGEBRA,
+                        "Pivoting for symmetric indefinite matrices (IPARM(20)) set to 1 to workaround issue with MKL 2025.0.1\n");
+      }
+   }
+#endif
+
    Jnlst().Printf(J_DETAILED, J_LINEAR_ALGEBRA,
                   "Pardiso matrix ordering     (IPARM(2)): %" IPOPT_INDEX_FORMAT "\n", IPARM_[1]);
    Jnlst().Printf(J_DETAILED, J_LINEAR_ALGEBRA,
@@ -356,20 +392,29 @@ void write_iajaa_matrix(
    int          sol_cnt
 )
 {
+#ifdef IPOPT_HAS_GETENV_S
+   if( getenv_s(NULL, NULL, 0, "IPOPT_WRITE_MAT") == 0 )
+#else
    if( getenv("IPOPT_WRITE_MAT") )
+#endif
    {
       /* Write header */
       char mat_name[128];
-      const char* mat_pref;
 
       Index NNZ = ia[N] - 1;
       Index i;
 
-      mat_pref = getenv("IPOPT_WRITE_PREFIX");
+#ifdef IPOPT_HAS_GETENV_S
+      char mat_pref[32];
+      if( getenv_s(NULL, mat_pref, sizeof(mat_pref), "IPOPT_WRITE_PREFIX") != 0 )
+         memcpy(mat_pref, "mat-ipopt", 10);
+#else
+      const char* mat_pref = getenv("IPOPT_WRITE_PREFIX");
       if( mat_pref == NULL )
       {
          mat_pref = "mat-ipopt";
       }
+#endif
 
       Snprintf(mat_name, 127, "%s_%03d-%02d.iajaa", mat_pref, iter_cnt, sol_cnt);
 
@@ -402,20 +447,29 @@ void write_iajaa_matrix(
    }
 
    /* additional matrix format */
+#ifdef IPOPT_HAS_GETENV_S
+   if( getenv_s(NULL, NULL, 0, "IPOPT_WRITE_MAT_MTX") == 0 )
+#else
    if( getenv("IPOPT_WRITE_MAT_MTX") )
+#endif
    {
       /* Write header */
       char mat_name[128];
-      const char* mat_pref;
 
       Index i;
       Index j;
 
-      mat_pref = getenv("IPOPT_WRITE_PREFIX");
-      if( mat_pref == NULL)
+#ifdef IPOPT_HAS_GETENV_S
+      char mat_pref[32];
+      if( getenv_s(NULL, mat_pref, sizeof(mat_pref), "IPOPT_WRITE_PREFIX") != 0 )
+         memcpy(mat_pref, "mat-ipopt", 10);
+#else
+      const char* mat_pref = getenv("IPOPT_WRITE_PREFIX");
+      if( mat_pref == NULL )
       {
          mat_pref = "mat-ipopt";
       }
+#endif
 
       Snprintf(mat_name, 127, "%s_%03d-%02d.mtx", mat_pref, iter_cnt, sol_cnt);
 

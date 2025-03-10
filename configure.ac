@@ -306,6 +306,18 @@ AC_COIN_CHECK_ISFINITE
 AC_CHECK_DECL([va_copy],[AC_DEFINE([IPOPT_HAS_VA_COPY],[1],
                                    [Define to 1 if va_copy is available])],,[#include <cstdarg>])
 
+################################
+# Secure C11 library functions #
+################################
+
+AC_CHECK_DECL([fopen_s(FILE**, const char*, const char*)],
+  [AC_DEFINE([IPOPT_HAS_FOPEN_S],[1],[Define to 1 if function fopen_s is available])],,
+  [#include <cstdio>])
+
+AC_CHECK_DECL([getenv_s(size_t*, char*, rsize_t, const char*)],
+  [AC_DEFINE([IPOPT_HAS_GETENV_S],[1],[Define to 1 if function getenv_s is available])],,
+  [#include <cstdlib>])
+
 ###########################
 # Random number generator #
 ###########################
@@ -316,6 +328,10 @@ AC_CHECK_DECL([drand48],[AC_DEFINE([IPOPT_HAS_DRAND48],[1],
 AC_CHECK_DECL([rand],[AC_DEFINE([IPOPT_HAS_RAND],[1],
                                 [Define to 1 if function rand is available])],,[#include <cstdlib>])
 
+AC_COIN_CHECK_NAMESPACE_DECL([std::srand],[1],
+  [AC_DEFINE([IPOPT_HAS_STD__RAND],[1],[Define to 1 if function std::rand is available])],[],
+  [#include <cstdlib>])
+
 ##################
 # feenableexcept #
 ##################
@@ -323,6 +339,14 @@ AC_CHECK_DECL([rand],[AC_DEFINE([IPOPT_HAS_RAND],[1],
 AC_CHECK_DECL([feenableexcept],
   [AC_DEFINE([IPOPT_HAS_FEENABLEEXCEPT],[1],[Define to 1 if function feenableexcept is available])],,
   [#include <cfenv>])
+
+#############
+# sigaction #
+#############
+
+AC_CHECK_DECL([sigaction(int, const struct sigaction*, struct sigaction*)],
+  [AC_DEFINE([IPOPT_HAS_SIGACTION],[1],[Define to 1 if function sigaction is available])],,
+  [#include <csignal>])
 
 ###################################################
 # Check if user wants inexact algorithm available #
