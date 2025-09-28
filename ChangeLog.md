@@ -7,6 +7,11 @@ More detailed information about incremental changes can be found in the
 
 ## 3.14
 
+### 3.14.19 (2025-07-30)
+
+- Fixed call to `getenv_s` on Windows, introduced with 3.14.17.
+  This invalid use of this call made the Pardiso interfaces unusable on Windows.
+
 ### 3.14.18 (2025-07-28)
 
 - Restricted workaround for using Pardiso to Intel MKL 2025.0.x.
@@ -21,7 +26,7 @@ More detailed information about incremental changes can be found in the
 - Undefine `max` if defined after include of windows.h in IpUtils.cpp [#834].
 - Added missing initialization of Filter Acceptor in case restoration phase is called
   when the fallback mechanism of BacktrackingLinearSearch has been activated [#834,#837].
-  If this happened in the first iteration, it lead to the use of uninitialized values.
+  If this happened in the first iteration, it led to the use of uninitialized values.
 - Added missing return if symbolic factorization with MA57 (ma57ad, ma57as) failed [#834].
 - Fixed application of scaling when computing violations of inequality constraints in
   `TNLP::get_curr_violations()`. Added `OrigIpoptNLP::d_space()`.
