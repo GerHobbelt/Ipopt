@@ -7,6 +7,13 @@ More detailed information about incremental changes can be found in the
 
 ## 3.14
 
+### 3.14.20 (2025-xx-yy)
+
+- Fixed issue where Ipopt exceptions could not been caught from other libraries
+  on macOS with clang when Ipopt or the other library was build with `-fvisibility=hidden`.
+- Call MPI_Init() with NULL instead of dummy arguments to fix SIGSEGV with MPICH >= 4.3.1
+  [#846, by Shengqi Chen].
+
 ### 3.14.19 (2025-07-30)
 
 - Fixed call to `getenv_s` on Windows, introduced with 3.14.17.
