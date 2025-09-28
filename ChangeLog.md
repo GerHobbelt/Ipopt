@@ -7,7 +7,7 @@ More detailed information about incremental changes can be found in the
 
 ## 3.14
 
-### 3.14.18 (2025-xx-yy)
+### 3.14.18 (2025-07-28)
 
 - Restricted workaround for using Pardiso to Intel MKL 2025.0.x.
   Intel MKL 2025.1.0 has the corresponding issue fixed. [#799]
@@ -20,9 +20,13 @@ More detailed information about incremental changes can be found in the
   in case ConsiderNewSystem failed [#834].
 - Undefine `max` if defined after include of windows.h in IpUtils.cpp [#834].
 - Added missing initialization of Filter Acceptor in case restoration phase is called
-  when the fallback mechanism of BacktrackingLinearSearch has been activated [#834].
+  when the fallback mechanism of BacktrackingLinearSearch has been activated [#834,#837].
   If this happened in the first iteration, it lead to the use of uninitialized values.
 - Added missing return if symbolic factorization with MA57 (ma57ad, ma57as) failed [#834].
+- Fixed application of scaling when computing violations of inequality constraints in
+  `TNLP::get_curr_violations()`. Added `OrigIpoptNLP::d_space()`.
+- Fixed signature of call to MKL's Pardiso: the DPARM argument does not exist in this
+  version of Pardiso.
 
 ### 3.14.17 (2024-12-14)
 
